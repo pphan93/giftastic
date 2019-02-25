@@ -27,7 +27,7 @@ $(document).ready(function () {
 
         console.log(currentTopic);
         var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-            currentTopic + "&api_key=brVbgSWm0Qx8rbsX2BvN7DYIZEMGTLIv&limit=10";
+            currentTopic + "&api_key=brVbgSWm0Qx8rbsX2BvN7DYIZEMGTLIv&limit=9";
 
         $.ajax({
                 url: queryURL,
@@ -39,63 +39,76 @@ $(document).ready(function () {
                 var results = response.data;
 
                 for (var i = 0; i < results.length; i++) {
-                    var gifDiv = $("<div>",{
-                        "class" : "card",
-                        "style": "width:400px"
 
-                    });
+                    var startDIV = $("<div>", {
+                        "class": "col-md-4 col-sm-6 imageItem"
+                        //"style": "width:400px"
+                    }).appendTo("#outputGifs");
+
+                    var gifDiv = $("<div>", {
+                        "class": "imageContainer"
+                        //"style": "width:400px"
+                    }).appendTo(startDIV);
                     //gifDiv.attr("class", "gif card");
-                   // gifDiv.attr("data-state", "still");
+                    // gifDiv.attr("data-state", "still");
 
                     var rating = results[i].rating;
                     var title = results[i].title;
 
                     //var p = $("<p>").text("Rating: " + rating);
 
-                    var gifImage = $("<img>",{
+                    var gifImage = $("<img>", {
                         src: results[i].images.original_still.url,
-                        "class" : "card-img-top gif",
-                        "style" : "height: 400px",
-                        "data-state": "still",
-                        "data-still" : results[i].images.original_still.url,
-                        "data-animate" : results[i].images.original.url
+                        "class": "gif",
+                        //"style" : "height: 400px"
+                        "data-state": "still img-fluid",
+                        "data-still": results[i].images.original_still.url,
+                        "data-animate": results[i].images.original.url
                     }).prependTo(gifDiv);
 
+                    $("<div>").attr("class", "overlay gif").appendTo(gifDiv);
 
-                    var cardBody = $("<div>", {
-                        "class" : "card-body",
+                    //var cardBody = $("<div>", {
+                    //    "class" : "card-body",
+                    //}).appendTo(gifDiv);
+
+                    var metadataDiv = $("<div>", {
+                        "class": "title",
+
                     }).appendTo(gifDiv);
 
                     $("<h4>", {
-                        "class" : "card-title",
+                        "class": "m-0",
                         text: title
-                    }).appendTo(cardBody);
+                    }).appendTo(metadataDiv);
 
                     $("<p>", {
-                        "class" : "card-text",
+                        "class": "m-0",
                         text: "Rating: " + rating
-                    }).appendTo(cardBody);
+                    }).appendTo(metadataDiv);
 
-                    var downloadButton = $("<a>", {
-                        "class" : "card-text btn download",
-                        //"download" : "gifImage.gif",
-                        "data-link" : results[i].images.original.url
-                    }).appendTo(cardBody);
+                    var downloadButton = $("<div>", {
+                        "class": "Gifbutton"
+                    }).appendTo(gifDiv);
 
-                    $("<i>", {
-                        "class" : "fa fa-download",
+                    var downloadLink = $("<a>", {
+                        "download": "",
+                        "data-link": results[i].images.original.url
                     }).appendTo(downloadButton);
 
-                    //gifImage.attr("src", results[i].images.fixed_height_still.url);
-                    //gifImage.attr("data-still", results[i].images.fixed_height_still.url);
-                    //gifImage.attr("data-animate", results[i].images.fixed_height.url);
-                    //personImage.attr("data-state", "still");
-                    // personImage.attr("class", "gif");
+                    $("<i>", {
+                        "class": "fa fa-download",
+                    }).appendTo(downloadLink);
 
-                    //gifDiv.prepend(p);
-                    //gifDiv.prepend(gifImage);
+                    var favorite = $("<a>", {
+                        "class" : "favoriteGif"
+                    }).appendTo(downloadButton);
 
-                    $("#outputGifs").prepend(gifDiv);
+                    $("<i>", {
+                        "class": "fa fa-heart",
+                    }).appendTo(favorite);
+
+                    //$("#outputGifs").prepend(gifDiv);
                 }
             });
 
@@ -103,12 +116,14 @@ $(document).ready(function () {
 
     $(document).on("click", ".gif", function () {
         console.log("test");
-        //var gifButton = $(this);
-        var getImage = $(this);
+        var gifButton = $(this).parent();
+        var getImage = gifButton.find("img");
+        //var getImage = $(this);
         var imageAnimate;
         var imageState = getImage.attr("data-state");
-        //var getImage = gifButton.find("img");
 
+
+        console.log(getImage);
 
         if (imageState === "still") {
             getImage.attr("data-state", "animate");
@@ -139,7 +154,7 @@ $(document).ready(function () {
     });
 
 
-    
+
     $(document).on("click", ".download", function (event) {
         // event.preventDefault() prevents submit button from trying to send a form.
         // Using a submit button instead of a regular button allows the user to hit
@@ -149,5 +164,14 @@ $(document).ready(function () {
         window.location = download.attr("data-link");
         console.log("test");
     });
+
+    $(document).on("click", ".favoriteGif", function (event) {
+        // event.preventDefault() prevents submit button from trying to send a form.
+        // Using a submit button instead of a regular button allows the user to hit
+        // "Enter" instead of clicking the button if desired
+        event.preventDefault();
+        console.log("testFavorite");
+    });
+
 
 });

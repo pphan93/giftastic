@@ -1,15 +1,11 @@
-.imageItem {
-    right: 0;
-    margin: 0 0 15px;
-}
-
 .imageContainer {
+    float: left;
     position: relative;
-    display: block;
+    margin: 10px;
     height: 300px;
     border-radius: .25em !important;
-    max-width: 350px;
-    margin: 0 auto;
+    right: 0;
+    margin: 0 0 15px;
 }
 
 .overlay {
@@ -30,16 +26,23 @@
 }
 
 img {
-    width: 350px;;
+    float: left;
+    border-radius: .25em !important;
+    position: absolute;
+    width: 400px;
     height: 300px;
+    left: 0;
+    margin: 0 auto;
 }
 
 .title {
     position: absolute;
-    width: 100%;
+    width: 300px;
     left: 0;
     bottom: 0;
     font-weight: 700;
+    /*font-size: 20px;*/
+    /*text-align: center;*/
     text-transform: uppercase;
     color: white;
     z-index: 1;
@@ -47,18 +50,29 @@ img {
     background-color: rgba(0, 0, 0, 0.493) !important;
 }
 
+/*
+  .imageContainer:hover .title {
+    top: 90px;
+  }
+*/
+
 .Gifbutton {
     position: absolute;
+    width: 300px;
+    right: -90%;
     top: 0;
-    right: 0;
+    /*text-align: center;*/
     opacity: 0;
     transition: opacity .35s ease;
 }
 
 .Gifbutton a {
+    /*width: 100px;*/
+    /*padding: 12px 48px;*/
     text-align: center;
     color: white !important;
     margin: 2px;
+    /*border: solid 2px white;*/
     z-index: 1;
 }
 
