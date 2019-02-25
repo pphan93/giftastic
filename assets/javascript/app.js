@@ -77,9 +77,9 @@ $(document).ready(function () {
                     }).appendTo(cardBody);
 
                     var downloadButton = $("<a>", {
-                        "class" : "card-text btn",
-                        "download" : "",
-                        "href" : results[i].images.original.url
+                        "class" : "card-text btn download",
+                        //"download" : "gifImage.gif",
+                        "data-link" : results[i].images.original.url
                     }).appendTo(cardBody);
 
                     $("<i>", {
