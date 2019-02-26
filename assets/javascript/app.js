@@ -1,4 +1,5 @@
 var topics = ["dog", "cat", "monkey"];
+var favArray= [];
 var currentTopic;
 
 function loadButtons() {
@@ -54,16 +55,20 @@ $(document).ready(function () {
 
                     var rating = results[i].rating;
                     var title = results[i].title;
+                    var dataStill = results[i].images.original_still.url
+                    var dataAnimate = results[i].images.original.url
+                    var dataID = results[i].id
 
                     //var p = $("<p>").text("Rating: " + rating);
 
                     var gifImage = $("<img>", {
-                        src: results[i].images.original_still.url,
+                        src: dataStill,
                         "class": "gif",
                         //"style" : "height: 400px"
-                        "data-state": "still img-fluid",
-                        "data-still": results[i].images.original_still.url,
-                        "data-animate": results[i].images.original.url
+                        "data-state": "still",
+                        "data-still": dataStill,
+                        "data-animate": dataAnimate,
+                        "data-id" : dataID
                     }).prependTo(gifDiv);
 
                     $("<div>").attr("class", "overlay gif").appendTo(gifDiv);
@@ -93,7 +98,8 @@ $(document).ready(function () {
 
                     var downloadLink = $("<a>", {
                         "download": "",
-                        "data-link": results[i].images.original.url
+                        "href" : dataAnimate,
+                        "data-link": dataAnimate
                     }).appendTo(downloadButton);
 
                     $("<i>", {
@@ -101,7 +107,13 @@ $(document).ready(function () {
                     }).appendTo(downloadLink);
 
                     var favorite = $("<a>", {
-                        "class" : "favoriteGif"
+                        "data-faved" : "no",
+                        "class" : "favoriteGif",
+                        "data-title" : title,
+                        "data-still" : dataStill,
+                        "data-Animate" : dataAnimate,
+                        "data-rating": rating,
+                        "data-id" : dataID
                     }).appendTo(downloadButton);
 
                     $("<i>", {
@@ -115,7 +127,7 @@ $(document).ready(function () {
     });
 
     $(document).on("click", ".gif", function () {
-        console.log("test");
+        //console.log("test");
         var gifButton = $(this).parent();
         var getImage = gifButton.find("img");
         //var getImage = $(this);
@@ -170,7 +182,34 @@ $(document).ready(function () {
         // Using a submit button instead of a regular button allows the user to hit
         // "Enter" instead of clicking the button if desired
         event.preventDefault();
-        console.log("testFavorite");
+
+
+
+        //Search for gif ID : https://api.giphy.com/v1/gifs/ GIF-ID  ?api_key=brVbgSWm0Qx8rbsX2BvN7DYIZEMGTLIv
+
+        var favObject = {};
+        var favTitle = $(this).attr("data-title");
+        var favStill = $(this).attr("data-still");
+        var favAnimate= $(this).attr("data-animate");
+        var favRating = $(this).attr("data-rating");
+        var faved = $(this).attr("data-faved");
+        var favID = $(this).attr("data-id");
+
+        if (faved === "no") {
+            $(this).attr("data-faved", "yes")
+            $(this).attr("id", "faved")
+            favObject = {
+                "favTitle" : favTitle,
+                "favStill" : favStill,
+                "favAnimate" : favAnimate,
+                "favRating" : favRating,
+                "favID" : favID
+            }
+
+            favArray.push(favObject)
+            localStorage.setItem("fav",JSON.stringify(favArray))
+            console.log(favTitle,favStill,favAnimate,favRating);
+        }
     });
 
 
