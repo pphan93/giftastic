@@ -58,6 +58,7 @@ $(document).ready(function () {
 
                     var rating = results[i].rating;
                     var title = results[i].title;
+<<<<<<< HEAD
                     var dataStill = results[i].images.original_still.url;
                     var dataAnimate = results[i].images.original.url;
                     var dataID = results[i].id;
@@ -176,6 +177,74 @@ $(document).ready(function () {
                         }).appendTo(favorite);
                     }
                         //$("#outputGifs").prepend(gifDiv);
+=======
+                    var dataStill = results[i].images.original_still.url
+                    var dataAnimate = results[i].images.original.url
+                    var dataID = results[i].id
+
+                    //var p = $("<p>").text("Rating: " + rating);
+
+                    var gifImage = $("<img>", {
+                        src: dataStill,
+                        "class": "gif",
+                        //"style" : "height: 400px"
+                        "data-state": "still",
+                        "data-still": dataStill,
+                        "data-animate": dataAnimate,
+                        "data-id" : dataID
+                    }).prependTo(gifDiv);
+
+                    $("<div>").attr("class", "overlay gif").appendTo(gifDiv);
+
+                    //var cardBody = $("<div>", {
+                    //    "class" : "card-body",
+                    //}).appendTo(gifDiv);
+
+                    var metadataDiv = $("<div>", {
+                        "class": "title",
+
+                    }).appendTo(gifDiv);
+
+                    $("<h4>", {
+                        "class": "m-0",
+                        text: title
+                    }).appendTo(metadataDiv);
+
+                    $("<p>", {
+                        "class": "m-0",
+                        text: "Rating: " + rating
+                    }).appendTo(metadataDiv);
+
+                    var downloadButton = $("<div>", {
+                        "class": "Gifbutton"
+                    }).appendTo(gifDiv);
+
+                    var downloadLink = $("<a>", {
+                        "download": "",
+                        "href" : dataAnimate,
+                        "data-link": dataAnimate
+                    }).appendTo(downloadButton);
+
+                    $("<i>", {
+                        "class": "fa fa-download",
+                    }).appendTo(downloadLink);
+
+                    var favorite = $("<a>", {
+                        "data-faved" : "no",
+                        "class" : "favoriteGif",
+                        "data-title" : title,
+                        "data-still" : dataStill,
+                        "data-Animate" : dataAnimate,
+                        "data-rating": rating,
+                        "data-id" : dataID
+                    }).appendTo(downloadButton);
+
+                    $("<i>", {
+                        "class": "fa fa-heart",
+                    }).appendTo(favorite);
+
+                    //$("#outputGifs").prepend(gifDiv);
+>>>>>>> 93f4c3441135db2e1acd6a11edd6e399c9351669
                 }
             });
 
@@ -271,21 +340,34 @@ $(document).ready(function () {
         var faved = $(this).attr("data-faved");
         var favID = $(this).attr("data-id");
 
+<<<<<<< HEAD
         console.log("test");
 
         if (faved === "no") {
             $(this).attr("data-faved", "yes");
             $(this).attr("id", "faved");
+=======
+        if (faved === "no") {
+            $(this).attr("data-faved", "yes")
+            $(this).attr("id", "faved")
+>>>>>>> 93f4c3441135db2e1acd6a11edd6e399c9351669
             favObject = {
                 "favTitle" : favTitle,
                 "favStill" : favStill,
                 "favAnimate" : favAnimate,
                 "favRating" : favRating,
                 "favID" : favID
+<<<<<<< HEAD
             };
             console.log(favArray);
             favArray.push(favObject);
             localStorage.setItem("fav",JSON.stringify(favArray));
+=======
+            }
+
+            favArray.push(favObject)
+            localStorage.setItem("fav",JSON.stringify(favArray))
+>>>>>>> 93f4c3441135db2e1acd6a11edd6e399c9351669
             console.log(favTitle,favStill,favAnimate,favRating);
         }
     });
