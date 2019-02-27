@@ -67,7 +67,7 @@ img {
 }
 
 .Gifbutton a:hover {
-    color: rgb(187, 187, 187) !important;
+    color: rgb(0, 255, 234) !important;
     cursor: pointer;
 }
 
@@ -78,8 +78,4 @@ img {
     font-weight: 700;
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   
-}
-
-#faved {
-    color: rgb(255, 0, 0) !important;
 }
