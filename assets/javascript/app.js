@@ -1,6 +1,13 @@
 var topics = ["dog", "cat", "monkey"];
-var favArray= [];
+var favArray = [];
 var currentTopic;
+var rating;
+var title;
+var dataStill;
+var dataAnimate;
+var dataID;
+var favYes;
+var favHtmlID;
 //var getFav = [];
 
 function loadButtons() {
@@ -19,16 +26,150 @@ function loadButtons() {
 
 }
 
-function getFavGif () {
+function getFavGif() {
     var getStorage = JSON.parse(localStorage.getItem("fav"));
     if (getStorage != null) {
         favArray = JSON.parse(localStorage.getItem("fav"));
     }
-    
-    
+
+
+}
+
+function getAjax(searchTopic) {
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        currentTopic + "&api_key=brVbgSWm0Qx8rbsX2BvN7DYIZEMGTLIv&limit=9";
+
+    $.ajax({
+            url: queryURL,
+            method: "GET"
+        })
+        .then(function (response) {
+
+            var results = response.data;
+
+            for (var i = 0; i < results.length; i++) {
+
+                rating = results[i].rating;
+                title = results[i].title;
+                dataStill = results[i].images.original_still.url;
+                dataAnimate = results[i].images.original.url;
+                dataID = results[i].id;
+                console.log(title);
+
+                //console.log(getFav + "insideGet") 
+
+                if (favArray != "" && favArray != null && favArray.length != 0) {
+                    for (var favCounter in favArray) {
+                        if (dataID === favArray[favCounter].favID) {
+                            favYes = "yes";
+                            favHtmlID = "faved";
+                            console.log("favTestYes");
+                            break;
+                            //outputGif ();
+                        } else {
+                            console.log("favTestNO");
+                            favYes = "no";
+                            favHtmlID = "notFaved";
+                            //outputGif ();
+                        }
+                    }
+                } else {
+                    favYes = "no";
+                    favHtmlID = "notFaved";
+                }
+
+                //console.log(dataID,favArray[favCounter].favID)
+                console.log(favYes + "----test");
+                outputGif();
+            }
+
+        });
 }
 
 
+function outputGif() {
+
+    var startDIV = $("<div>", {
+        "class": "col-md-4 col-sm-6 imageItem"
+        //"style": "width:400px"
+    }).appendTo("#outputGifs");
+
+    var gifDiv = $("<div>", {
+        "class": "imageContainer"
+        //"style": "width:400px"
+    }).appendTo(startDIV);
+    //gifDiv.attr("class", "gif card");
+    // gifDiv.attr("data-state", "still");
+
+
+
+    //var p = $("<p>").text("Rating: " + rating);
+
+    var gifImage = $("<img>", {
+        src: dataStill,
+        "class": "gif",
+        //"style" : "height: 400px"
+        "data-state": "still",
+        "data-still": dataStill,
+        "data-animate": dataAnimate,
+        "data-id": dataID
+    }).prependTo(gifDiv);
+
+    $("<div>").attr("class", "overlay gif").appendTo(gifDiv);
+
+    //var cardBody = $("<div>", {
+    //    "class" : "card-body",
+    //}).appendTo(gifDiv);
+
+    var metadataDiv = $("<div>", {
+        "class": "title",
+
+    }).appendTo(gifDiv);
+
+    $("<h4>", {
+        "class": "m-0",
+        text: title
+    }).appendTo(metadataDiv);
+
+    $("<p>", {
+        "class": "m-0",
+        text: "Rating: " + rating
+    }).appendTo(metadataDiv);
+
+    var downloadButton = $("<div>", {
+        "class": "Gifbutton"
+    }).appendTo(gifDiv);
+
+
+    var downloadLink = $("<a>", {
+        //"download": "",
+        //"href" : outside,
+        "class": "download",
+        "data-link": dataAnimate
+    }).appendTo(downloadButton);
+
+    $("<i>", {
+        "class": "fa fa-download",
+    }).appendTo(downloadLink);
+
+    var favorite = $("<a>", {
+        "data-faved": favYes,
+        "class": "favoriteGif",
+        "id": favHtmlID,
+        "data-title": title,
+        "data-still": dataStill,
+        "data-Animate": dataAnimate,
+        "data-rating": rating,
+        "data-id": dataID
+    }).appendTo(downloadButton);
+
+    console.log(favYes, favHtmlID);
+
+    $("<i>", {
+        "class": "fa fa-heart",
+    }).appendTo(favorite);
+    //$("#outputGifs").prepend(gifDiv);
+}
 
 $(document).ready(function () {
     //console.log(favArray.indexOf("nrN8fUJ4EZn5m"))
@@ -41,144 +182,8 @@ $(document).ready(function () {
         currentTopic = $(this).text();
         $("#outputGifs").empty();
 
+        getAjax(currentTopic);
         console.log(currentTopic);
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-            currentTopic + "&api_key=brVbgSWm0Qx8rbsX2BvN7DYIZEMGTLIv&limit=9";
-
-        $.ajax({
-                url: queryURL,
-                method: "GET"
-            })
-
-            .then(function (response) {
-
-                var results = response.data;
-
-                for (var i = 0; i < results.length; i++) {
-
-                    var rating = results[i].rating;
-                    var title = results[i].title;
-                    var dataStill = results[i].images.original_still.url;
-                    var dataAnimate = results[i].images.original.url;
-                    var dataID = results[i].id;
-                    var favYes;
-                    var favHtmlID;
-                    console.log(title);
-
-                    //console.log(getFav + "insideGet") 
-
-                    if (favArray != "" && favArray != null && favArray.length != 0 ) {
-                        for (var favCounter in favArray) {
-                            if (dataID === favArray[favCounter].favID) {
-                                favYes = "yes";
-                                favHtmlID = "faved";
-                                console.log("favTestYes");
-                                break;
-                                //outputGif ();
-                            }
-                            else {
-                                console.log("favTestNO");
-                                favYes = "no";
-                                favHtmlID = "notFaved";
-                                //outputGif ();
-                            }
-                        }
-                    }
-                    else {
-                        favYes = "no";
-                        favHtmlID = "notFaved";
-                    }
-
-                    //console.log(dataID,favArray[favCounter].favID)
-                    console.log(favYes + "----test");
-                    outputGif ();
-
-                    function outputGif () {
-
-                        var startDIV = $("<div>", {
-                            "class": "col-md-4 col-sm-6 imageItem"
-                            //"style": "width:400px"
-                        }).appendTo("#outputGifs");
-
-                        var gifDiv = $("<div>", {
-                            "class": "imageContainer"
-                            //"style": "width:400px"
-                        }).appendTo(startDIV);
-                        //gifDiv.attr("class", "gif card");
-                        // gifDiv.attr("data-state", "still");
-
-
-
-                        //var p = $("<p>").text("Rating: " + rating);
-
-                        var gifImage = $("<img>", {
-                            src: dataStill,
-                            "class": "gif",
-                            //"style" : "height: 400px"
-                            "data-state": "still",
-                            "data-still": dataStill,
-                            "data-animate": dataAnimate,
-                            "data-id" : dataID
-                        }).prependTo(gifDiv);
-
-                        $("<div>").attr("class", "overlay gif").appendTo(gifDiv);
-
-                        //var cardBody = $("<div>", {
-                        //    "class" : "card-body",
-                        //}).appendTo(gifDiv);
-
-                        var metadataDiv = $("<div>", {
-                            "class": "title",
-
-                        }).appendTo(gifDiv);
-
-                        $("<h4>", {
-                            "class": "m-0",
-                            text: title
-                        }).appendTo(metadataDiv);
-
-                        $("<p>", {
-                            "class": "m-0",
-                            text: "Rating: " + rating
-                        }).appendTo(metadataDiv);
-
-                        var downloadButton = $("<div>", {
-                            "class": "Gifbutton"
-                        }).appendTo(gifDiv);
-
-
-                        var downloadLink = $("<a>", {
-                            //"download": "",
-                            //"href" : outside,
-                            "class" : "download",
-                            "data-link": dataAnimate
-                        }).appendTo(downloadButton);
-
-                        $("<i>", {
-                            "class": "fa fa-download",
-                        }).appendTo(downloadLink);
-
-                        var favorite = $("<a>", {
-                            "data-faved" : favYes,
-                            "class" : "favoriteGif",
-                            "id" : favHtmlID,
-                            "data-title" : title,
-                            "data-still" : dataStill,
-                            "data-Animate" : dataAnimate,
-                            "data-rating": rating,
-                            "data-id" : dataID
-                        }).appendTo(downloadButton);
-
-                        console.log(favYes,favHtmlID);
-
-                        $("<i>", {
-                            "class": "fa fa-heart",
-                        }).appendTo(favorite);
-                    }
-                        //$("#outputGifs").prepend(gifDiv);
-                }
-            });
-
     });
 
     $(document).on("click", ".gif", function () {
@@ -232,22 +237,22 @@ $(document).ready(function () {
         console.log("test");
 
         fetch(download.attr("data-link"))
-        .then(function(response) {
-            return response.blob();
-        })
-        .then(function(blob) {
-            // here the image is a blob
-            var gifLink = URL.createObjectURL(blob);
+            .then(function (response) {
+                return response.blob();
+            })
+            .then(function (blob) {
+                // here the image is a blob
+                var gifLink = URL.createObjectURL(blob);
 
-            var downloadNow = $("<a>",{
-                "href" : gifLink,
-                "download" : ""
-                //text: "test"
-            }).appendTo("#outputGifs");
+                var downloadNow = $("<a>", {
+                    "href": gifLink,
+                    "download": ""
+                    //text: "test"
+                }).appendTo("#outputGifs");
 
-            downloadNow[0].click();
-            downloadNow.remove();
-        });
+                downloadNow[0].click();
+                downloadNow.remove();
+            });
 
         console.log("test");
 
@@ -266,27 +271,37 @@ $(document).ready(function () {
         var favObject = {};
         var favTitle = $(this).attr("data-title");
         var favStill = $(this).attr("data-still");
-        var favAnimate= $(this).attr("data-animate");
+        var favAnimate = $(this).attr("data-animate");
         var favRating = $(this).attr("data-rating");
         var faved = $(this).attr("data-faved");
         var favID = $(this).attr("data-id");
 
-        console.log("test");
+        console.log("favID");
 
         if (faved === "no") {
             $(this).attr("data-faved", "yes");
             $(this).attr("id", "faved");
             favObject = {
-                "favTitle" : favTitle,
-                "favStill" : favStill,
-                "favAnimate" : favAnimate,
-                "favRating" : favRating,
-                "favID" : favID
+                //"favTitle": favTitle,
+                //"favStill": favStill,
+                //"favAnimate": favAnimate,
+                //"favRating": favRating,
+                "favID": favID
             };
             console.log(favArray);
             favArray.push(favObject);
-            localStorage.setItem("fav",JSON.stringify(favArray));
-            console.log(favTitle,favStill,favAnimate,favRating);
+            localStorage.setItem("fav", JSON.stringify(favArray));
+            //console.log(favTitle, favStill, favAnimate, favRating);
+        }
+        else {
+            favArray = $.grep(favArray,function(e) {
+                console.log(e.favID);
+                return e.favID != favID;
+                
+            });
+            localStorage.setItem("fav", JSON.stringify(favArray));
+            $(this).attr("data-faved", "no");
+            $(this).attr("id", "notFaved");
         }
     });
 
