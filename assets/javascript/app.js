@@ -305,6 +305,12 @@ $(document).ready(function () {
         gifAmt = gifAmt + 9;
         getAjax(currentTopic, false);
 
+    $(document).on("click", "#removeFav", function (event) {
+        event.preventDefault();
+        localStorage.removeItem("fav");
+        localStorage.removeItem("topics");
+        getFavGif();
+    });
 
     });
 

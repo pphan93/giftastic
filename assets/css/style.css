@@ -127,6 +127,7 @@ img {
 
 #faved {
     color: rgb(255, 0, 0) !important;
+<<<<<<< HEAD
 }
 
 @media only screen and (max-width: 768px) {
@@ -167,4 +168,6 @@ img {
         display: block;
         background: transparent !important;
     }
+=======
+>>>>>>> 4b5d9139d22e7c28f470d05d8d045528e7821a3e
 }
