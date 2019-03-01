@@ -1,0 +1,81 @@
+.imageItem {
+    right: 0;
+    margin: 0 0 15px;
+}
+
+.imageContainer {
+    position: relative;
+    display: block;
+    height: 300px;
+    border-radius: .25em !important;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.5s ease;
+}
+
+.imageContainer:hover .overlay {
+    border-radius: .25em !important;
+    cursor: pointer;
+    display: block;
+    background: rgba(0, 0, 0, .3);
+}
+
+img {
+    width: 350px;;
+    height: 300px;
+}
+
+.title {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: white;
+    z-index: 1;
+    transition: top .5s ease;
+    background-color: rgba(0, 0, 0, 0.493) !important;
+}
+
+.Gifbutton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity .35s ease;
+}
+
+.Gifbutton a {
+    text-align: center;
+    color: white !important;
+    margin: 2px;
+    z-index: 1;
+}
+
+.imageContainer:hover .Gifbutton {
+    opacity: 1;
+}
+
+.Gifbutton a:hover {
+    color: rgb(0, 255, 234) !important;
+    cursor: pointer;
+}
+
+.section-heading {
+    font-size: 40px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 700;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  
+}
