@@ -47,7 +47,9 @@ function getFavGif() {
 
 function getTopicStorage() {
     var getStorage = JSON.parse(localStorage.getItem("topics"));
-    if (getStorage != null) {
+
+    console.log(getStorage);
+    if (getStorage != null && getStorage.length != 0) {
         topics = JSON.parse(localStorage.getItem("topics"));
     } else {
         topics = ["dog", "cat", "monkey"];
