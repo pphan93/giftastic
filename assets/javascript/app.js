@@ -8,19 +8,18 @@ var dataAnimate;
 var dataID;
 var favYes;
 var favHtmlID;
-//var getFav = [];
+var gifAmt = 9;
+var startAmt = 0;
 
 function loadButtons() {
     $("#topicButtonLoad").empty();
     $("#alertMsg").removeClass("alert alert-info");
     for (var i = 0; i < topics.length; i++) {
 
-
-        console.log("test");
         var button = $("<button/>", {
             "id": topics[i],
             "type": "button",
-            "class": "topicsButton btn btn-light",
+            "class": "topicsButton btn btn-light mr-2",
             text: topics[i]
         }).appendTo("#topicButtonLoad");
 
@@ -28,7 +27,6 @@ function loadButtons() {
             "class": "removeTopic",
             "data-topic": topics[i],
             html: "&#215;"
-            //html: '<i class="fa fa-heart"></i>'
         }).appendTo(button);
 
         $("<div>", {
@@ -78,14 +76,11 @@ function getAjax(searchTopic, anID) {
     var queryURL;
 
     if (anID) {
-        //$("#topicButtonLoad").empty();
         removeGifs();
         queryURL = "https://api.giphy.com/v1/gifs/" + searchTopic + "?api_key=" + apiKey;
     } else {
-        queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTopic + "&api_key=" + apiKey + "&limit=9";
+        queryURL = "https://api.giphy.com/v1/gifs/search?q=" + searchTopic + "&api_key=" + apiKey + "&limit=" + gifAmt;
     }
-
-    console.log(queryURL);
     ////Search for gif ID : https://api.giphy.com/v1/gifs/ GIF-ID  ?api_key=brVbgSWm0Qx8rbsX2BvN7DYIZEMGTLIv
 
     $.ajax({
@@ -96,51 +91,45 @@ function getAjax(searchTopic, anID) {
 
             var results = response.data;
             var anArray = Array.isArray(results);
-            console.log(queryURL);
 
             if (anArray) {
 
                 for (var i in results) {
-                    rating = results[i].rating;
-                    console.log(rating);
-                    title = results[i].title;
-                    dataStill = results[i].images.original_still.url;
-                    dataAnimate = results[i].images.original.url;
-                    dataID = results[i].id;
-                    console.log(title);
+                    if (i >= startAmt && i <= gifAmt) {
+                        rating = results[i].rating;
+                        title = results[i].title;
+                        dataStill = results[i].images.original_still.url;
+                        dataAnimate = results[i].images.original.url;
+                        dataID = results[i].id;
 
-                    if (favArray != "" && favArray != null && favArray.length != 0) {
-                        for (var favCounter in favArray) {
-                            if (dataID === favArray[favCounter].favID) {
-                                favYes = "yes";
-                                favHtmlID = "faved";
-                                console.log("favTestYes");
-                                break;
-                            } else {
-                                console.log("favTestNO");
-                                favYes = "no";
-                                favHtmlID = "notFaved";
+                        if (favArray != "" && favArray != null && favArray.length != 0) {
+                            for (var favCounter in favArray) {
+                                if (dataID === favArray[favCounter].favID) {
+                                    favYes = "yes";
+                                    favHtmlID = "faved";
+                                    break;
+                                } else {
+                                    favYes = "no";
+                                    favHtmlID = "notFaved";
+                                }
                             }
+                        } else {
+                            favYes = "no";
+                            favHtmlID = "notFaved";
                         }
-                    } else {
-                        favYes = "no";
-                        favHtmlID = "notFaved";
-                    }
 
-                    console.log(favYes + "----test");
-                    outputGif();
+                        outputGif();
+
+                    }
                 }
             } else {
-                console.log(results);
                 rating = results.rating;
-                console.log(rating);
                 title = results.title;
                 dataStill = results.images.original_still.url;
                 dataAnimate = results.images.original.url;
                 dataID = results.id;
                 favYes = "yes";
                 favHtmlID = "faved";
-                console.log(title);
 
                 outputGif();
             }
@@ -215,14 +204,8 @@ function outputGif() {
         "data-faved": favYes,
         "class": "favoriteGif",
         "id": favHtmlID,
-        "data-title": title,
-        "data-still": dataStill,
-        "data-Animate": dataAnimate,
-        "data-rating": rating,
         "data-id": dataID
     }).appendTo(downloadButton);
-
-    console.log(favYes, favHtmlID);
 
     $("<i>", {
         "class": "fa fa-heart",
@@ -255,41 +238,37 @@ $(document).ready(function () {
     getTopicStorage();
     loadButtons();
 
-    console.log(favArray);
-
-
     $(document).on("click", ".topicOverlay", function () {
         removeGifs();
         removeAlert();
+        gifAmt = 9;
+        startAmt = 0;
 
         currentTopic = $(this).parent().text();
         getAjax(currentTopic, false);
-        console.log(currentTopic);
+        $("#outputLoadMore").empty();
+        var startDIV = $("<button>", {
+            text: "Load More",
+            "id": "loadMoreBtn",
+            "class": "btn btn-light mr-2"
+        }).appendTo("#outputLoadMore");
     });
 
     $(document).on("click", ".removeTopic", function () {
-        console.log("test remove");
         removeTopic = $(this).attr("data-topic");
         topics = $.grep(topics, function (e) {
-            console.log(e, removeTopic);
             return e != removeTopic;
         });
-        console.log(topics);
         loadButtons();
         localStorage.setItem("topics", JSON.stringify(topics));
 
     });
 
     $(document).on("click", ".gif", function () {
-        //console.log("test");
         var gifButton = $(this).parent();
         var getImage = gifButton.find("img");
-        //var getImage = $(this);
         var imageAnimate;
         var imageState = getImage.attr("data-state");
-
-
-        console.log(getImage);
 
         if (imageState === "still") {
             getImage.attr("data-state", "animate");
@@ -301,9 +280,6 @@ $(document).ready(function () {
             getImage.attr("src", imageStill);
 
         }
-
-        //console.log(imageAnimate);
-
     });
 
 
@@ -316,18 +292,39 @@ $(document).ready(function () {
         var topicInput = $("#inputTopic").val();
         topics.push(topicInput);
         $("#inputTopic").val("");
+        localStorage.setItem("topics", JSON.stringify(topics));
         loadButtons();
+
+    });
+
+    $(document).on("click", "#loadMoreBtn", function (event) {
+        event.preventDefault();
+        //removeGifs();
+        removeAlert();
+        startAmt = gifAmt
+        gifAmt = gifAmt + 9;
+        getAjax(currentTopic, false);
+
+    $(document).on("click", "#removeFav", function (event) {
+        event.preventDefault();
+        localStorage.removeItem("fav");
+        localStorage.removeItem("topics");
+        getFavGif();
+    });
 
     });
 
     $(document).on("click", "#showFav", function (event) {
         event.preventDefault();
+        $("#outputLoadMore").empty();
         removeAlert();
         loadFavGif();
     });
 
     $(document).on("click", "#home", function (event) {
         event.preventDefault();
+        removeAlert();
+        $("#outputLoadMore").empty();
         removeGifs();
     });
 
@@ -335,6 +332,8 @@ $(document).ready(function () {
         event.preventDefault();
         localStorage.removeItem("fav");
         localStorage.removeItem("topics");
+        $("#alertMsg").addClass("alert alert-info");
+        $("#alertMsg").text("All the favorited gif and topics have been removed!");
         getFavGif();
     });
 
@@ -349,32 +348,19 @@ $(document).ready(function () {
         //Search for gif ID : https://api.giphy.com/v1/gifs/ GIF-ID  ?api_key=brVbgSWm0Qx8rbsX2BvN7DYIZEMGTLIv
 
         var favObject = {};
-        var favTitle = $(this).attr("data-title");
-        var favStill = $(this).attr("data-still");
-        var favAnimate = $(this).attr("data-animate");
-        var favRating = $(this).attr("data-rating");
         var faved = $(this).attr("data-faved");
         var favID = $(this).attr("data-id");
-
-        console.log("favID");
 
         if (faved === "no") {
             $(this).attr("data-faved", "yes");
             $(this).attr("id", "faved");
             favObject = {
-                //"favTitle": favTitle,
-                //"favStill": favStill,
-                //"favAnimate": favAnimate,
-                //"favRating": favRating,
                 "favID": favID
             };
-            console.log(favArray);
             favArray.push(favObject);
             localStorage.setItem("fav", JSON.stringify(favArray));
-            //console.log(favTitle, favStill, favAnimate, favRating);
         } else {
             favArray = $.grep(favArray, function (e) {
-                console.log(e.favID);
                 return e.favID != favID;
             });
             localStorage.setItem("fav", JSON.stringify(favArray));

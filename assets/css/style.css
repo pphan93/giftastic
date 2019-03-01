@@ -127,4 +127,47 @@ img {
 
 #faved {
     color: rgb(255, 0, 0) !important;
+<<<<<<< HEAD
+}
+
+@media only screen and (max-width: 768px) {
+
+    /* For mobile phones: */
+    .removeTopic {
+        position: absolute;
+        top: -10px;
+        right: -2px;
+        padding: 0;
+        margin: 0;
+        font-size: 20px;
+        display: inline;
+        z-index: 1;
+        opacity: 1;
+        transition: opacity .35s ease;
+        color: rgba(0, 0, 0, 0.274) !important;
+    }
+
+    .Gifbutton {
+        position: absolute;
+        top: 0;
+        right: 0;
+        opacity: 1;
+        transition: opacity .35s ease;
+    }
+
+    .Gifbutton a {
+        text-align: center;
+        color: rgb(228, 228, 228) !important;
+        margin: 2px;
+        z-index: 1;
+    }
+
+    .imageContainer:hover .overlay {
+        border-radius: .30em !important;
+        cursor: pointer;
+        display: block;
+        background: transparent !important;
+    }
+=======
+>>>>>>> 4b5d9139d22e7c28f470d05d8d045528e7821a3e
 }
